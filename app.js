@@ -78,7 +78,8 @@ app.get('/players/:playerId/', async (request, response) => {
     WHERE
      player_id= ${playerId};`
   const player = await db.get(getplayers)
-  response.send(player)
+  const newplayer = convertDbObjectToResponseObject(player)
+  response.send(newplayer)
 })
 
 app.put('/players/:playerId/', async (request, response) => {
