@@ -8,6 +8,14 @@ app.use(express.json())
 const dbPath = path.join(__dirname, 'cricketTeam.db')
 
 let db = null
+const convertDbObjectToResponseObject = dbObject => {
+  return {
+    playerId: dbObject.player_id,
+    playerName: dbObject.player_name,
+    jerseyNumber: dbObject.jersey_number,
+    role: dbObject.role,
+  }
+}
 
 const initializeDBAndServer = async () => {
   try {
@@ -35,7 +43,10 @@ app.get('/players/', async (request, response) => {
     ORDER BY
       player_id;`
   const playersArray = await db.all(getplayers)
-  response.send(playersArray)
+  
+   response.send(
+    playersArray.map(eachPlayer => convertDbObjectToResponseObject(eachPlayer)),
+  )
 })
 
 app.post('/players/', async (request, response) => {
